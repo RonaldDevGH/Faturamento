@@ -1,0 +1,60 @@
+<div class="col-8 mx-auto">
+    <nav class="bg-light rounded border p-1 d-flex align-items-start gap-4 me-3" style="height: 32px;">
+        <div class="col-5">
+            <p><i class="bi bi-clock-history"></i> Histórico de movimentação</p>
+        </div>
+        <div class="col-3"></div>
+    </nav>
+    <div id="historicoNotasFicais" [ngClass]="notasFiscais.length > 16 ? 'table-responsive' : 'table-responsive me-3'" style="max-height: 720px;">
+        <table class="table table-secondary" style="margin-bottom: 0; ">
+            <thead *ngIf="!hiddenTabela">
+                <tr style="position: sticky; top: 0; z-index: 1;">
+                    <th scope="col">Número</th>
+                    <th>Status</th>
+                    <th>Data de emissão</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody *ngIf="!hiddenTabela">
+                <tr *ngFor="let n of notasFiscais">
+                    <td>{{ n.seqNumero }}</td>
+                    <td>{{ n.status }}</td>
+                    <td>{{ n.dataEmissao }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btnSemBorda" (click)="visualizarNota(n)">
+                            <i class="bi bi-eye"></i> Visualizar
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="notasFiscais.length === 0">
+                    <td colspan="4" class="text-center text-muted" style="height: 45px;">Nenhuma movimentação registrada</td>
+                </tr>
+            </tbody>
+            <tbody *ngIf="hiddenTabela">
+                <tr>
+                    <td><button class="btn btn-sm btnSemBorda" (click)="hiddenTabela = false"><< Voltar</button></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="notaSendoExibida" *ngIf="hiddenTabela" [ngClass]="notaAlvo.produtos.length > 4 ? 'bg-secondary bg-opacity-25 p-3' : 'bg-secondary bg-opacity-25 me-3 p-3'" style="max-height: 380px; min-height: 380px; overflow: auto;">
+        <div style="transform: scale(0.8) ;transform-origin: top;">
+            <app-nota-fiscal-layout [notaFiscal]="notaAlvo"></app-nota-fiscal-layout>
+        </div>
+    </div>
+</div>
+
+<footer class="fixed-bottom p-3">
+    <div class="container d-flex justify-content-end gap-3">
+        <button class="col-2 btn btn-outline-secondary" (click)="mudarPagina.emit('estoque')">
+            Estoque
+        </button>
+        <button class="col-auto btn btn-outline-secondary" (click)="mudarPagina.emit('CNF')">
+            Cadastro de nota fiscal
+        </button>
+    </div>
+</footer>

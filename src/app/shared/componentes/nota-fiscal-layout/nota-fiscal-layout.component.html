@@ -1,0 +1,32 @@
+
+<div *ngIf="!processando" class="container d-flex row bg-light border rounded p-3 gap-4">
+    <div class="d-flex justify-content-center">
+        <h1>Nota Fiscal Digital</h1>
+    </div>
+    <div>
+        <div class="d-flex">
+            <h2 class="col-6">Nº {{ notaFiscal.seqNumero }} </h2>
+            <h3 class="col-6">Status: <span [ngClass]="notaFiscal.status === 'Aberta' ? 'text-success' : 'text-danger'">{{ notaFiscal.status }}</span></h3>
+        </div>
+        <h4 *ngIf="notaFiscal.dataEmissao !== null">Data de Emissão: {{ notaFiscal.dataEmissao | date: 'dd/MM/yyyy HH:mm' }}</h4>
+        <h4 *ngIf="notaFiscal.dataEmissao === null">Data de Emissão: Em andamento</h4>
+    </div>
+    <table class="table table-light mx-auto">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let nf of notaFiscal.produtos">
+                <td class="col-8">{{ produtosInfo[nf.produtoId].descricao || 'Carregando...' }}</td>
+                <td>{{ nf.quantidade }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div *ngIf="processando" class="row bg-light border rounded p-3 justify-content-center text-center">
+  <div class="spinner-border" role="status"></div>
+  <span>Sincronizando dados...</span>
+</div>
