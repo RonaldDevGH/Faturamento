@@ -1,0 +1,87 @@
+<div class="row col-8 mx-auto d-flex gap-0">
+    <nav aria-label="...">
+        <ul class="pagination pagination-md" style="margin-bottom: 0;">
+            <li class="page-item">
+                <button class="page-link" [ngClass]="view === 'tabela-produtos' ? 'text-white bg-secondary border-secondary' : 'text-secondary'" (click)="view = 'tabela-produtos'">
+                    <i class="bi bi-bag"></i>
+                </button>
+            </li>
+            <li class="page-item">
+                <button class="page-link" [ngClass]="view === 'nota-fiscal' ? 'text-white bg-secondary border-secondary' : 'text-secondary'" (click)="view = 'nota-fiscal'">
+                    <i class="bi bi-file-text"></i>
+                </button>
+            </li>
+        </ul>
+    </nav>
+    <div id="adicionando-produtos" *ngIf="view === 'tabela-produtos'">
+        <div class="table-responsive" style="max-height: 320px;">
+            <table class="table table-secondary">
+                <thead>
+                    <tr>
+                        <th scope="col">Produto</th>
+                        <th>Quantidade</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of produtosNaNota">
+                        <td>{{ getDescricaoProduto(p.produtoId) }}</td>
+                        <td>{{ p.quantidade }}</td>
+                        <td class="text-end"><button *ngIf="novaNota.status !== 'Fechada'" class="btn btn-danger" (click)="removerProduto(produtosNaNota.indexOf(p))"><i class="bi bi-trash3-fill"></i></button></td>
+                    </tr>
+                    <tr *ngIf="produtosNaNota.length === 0">
+                        <td colspan="3" class="text-center text-muted" style="height: 45px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="!mostrarForm" class="d-flex justify-content-center gap-3">
+            <button *ngIf="novaNota.status !== 'Fechada'" class="btn btn-secondary" (click)="mostrarForm = true">Adicionar produto</button>
+            <button *ngIf="novaNota.status === ''" class="btn btn-success" (click)="gerarNotaFiscal()">Gerar nota fiscal</button>
+            <button *ngIf="novaNota.status === 'Fechada'" class="btn btn-warning" (click)="gerarNovaNota()">Gerar nova nota</button>
+        </div>
+        <form *ngIf="mostrarForm" class="row gap-3 rounded border bg-light p-2" action="">
+            <div class="row">
+                <div class="col-8 form-group">
+                    <label for="nome">Produto:</label>
+                    <select class="form-select mt-2" id="nome" name="produto" [(ngModel)]="produtoSelecionado">
+                        <option selected disabled>Selecione um produto</option>
+                        <option *ngFor="let p of produtos" [ngValue]="p">{{ p.descricao }}</option>
+                    </select>
+                    <div id="invalid-desc" class="invalid-feedback"></div>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2 form-group">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" class="form-control mt-2" id="quantidade" name="quantidade" placeholder="0" [(ngModel)]="quantidadeSelecionada">
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-primary" (click)="adicionarProduto(produtoSelecionado, quantidadeSelecionada)">Adicionar</button>
+                <button type="button" class="btn btn-secondary" (click)="mostrarForm = false">Fechar</button>
+            </div>
+        </form>
+    </div>
+    <div id="nota-fiscal" class="d-flex row justify-content-center" *ngIf="view === 'nota-fiscal'">
+        <div style="width: 95%; max-height: 380px; overflow-y: auto; scroll-behavior: smooth;">
+            <app-nota-fiscal-layout [notaFiscal]="novaNota"></app-nota-fiscal-layout>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button *ngIf="!imprimirDisabled" class="btn btn-success" (click)="imprimirNotaFiscal()">Imprimir</button>
+            <button *ngIf="processando" class="btn btn-success" type="button" disabled>
+                <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+                Processando...
+            </button>
+        </div>
+    </div>
+    <footer class="fixed-bottom p-3">
+        <div class="container d-flex justify-content-end gap-3">
+            <button class="col-2 btn btn-outline-secondary" (click)="mudarPagina.emit('estoque')">
+                Estoque
+            </button>
+            <button class="col-2 btn btn-outline-secondary" (click)="mudarPagina.emit('faturamento')">
+                Faturamento
+            </button>
+        </div>
+    </footer>
+</div>

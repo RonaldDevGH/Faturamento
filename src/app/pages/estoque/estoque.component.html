@@ -1,0 +1,57 @@
+<div class="col-8 mx-auto">
+    <div id="tabelaProdutos" class="table-responsive" style="max-height: 250px;">
+        <table class="table table-bordered mb-0" style="min-height: 250px;">
+            <thead class="table-dark" style="position: sticky; top: 0; z-index: 1;">
+                <tr>
+                    <th scope="col">Código do produto</th>
+                    <th>Descrição</th>
+                    <th>Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of produtos" style="height: 50px; overflow-y: auto;">
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.descricao }}</td>
+                    <td>{{ p.saldo }}</td>
+                </tr>
+                <tr *ngIf="produtos.length === 0">
+                    <td colspan="3" class="text-center text-muted" style="height: 50px;">Nenhum produto cadastrado</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="botaoCadastrar" class="d-flex justify-content-end mt-2">
+        <button *ngIf="exibirForm === false" class="btn btn-secondary btn-sm" (click)="exibirForm = true">
+            Cadastrar Produto
+        </button>
+    </div>
+    <div id="formulario" class="ps-2 mt-3 d-flex justify-content-center">
+        <form *ngIf="exibirForm" class="row col-8 gap-3 rounded border bg-light p-2" action="">
+            <div class="row">
+                <div class="col-10 form-group">
+                    <label for="nome">Descrição:</label>
+                    <input type="text" class="form-control mt-2" id="nome" name="descricao" [(ngModel)]="produto.descricao" placeholder="Nome do produto">
+                    <div id="invalid-desc" class="invalid-feedback"></div>
+                </div>
+                <div class="col-2 form-group">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" class="form-control mt-2" id="quantidade" style="width: 80px;" name="saldo" #qtdModel="ngModel" [(ngModel)]="produto.saldo" placeholder="0">
+                </div>
+            </div>
+            <div class="d-flex justify-content-center gap-2">
+                <button type="submit" class="btn btn-primary btn-sm" (click)="validarProduto()">Adicionar</button>
+                <button type="submit" class="btn btn-secondary btn-sm" (click)="exibirForm = false">Fechar</button>
+            </div>
+        </form>
+    </div>
+    <footer class="fixed-bottom p-3">
+        <div class="container d-flex justify-content-end gap-3">
+            <button class="col-auto btn btn-outline-secondary" (click)="mudarPagina.emit('CNF')">
+                Cadastro de nota fiscal
+            </button>
+            <button class="col-2 btn btn-outline-secondary" (click)="mudarPagina.emit('faturamento')">
+                Faturamento
+            </button>
+        </div>
+    </footer>
+</div>

@@ -1,0 +1,6 @@
+<div class="bg-white min-vh-100">
+    <div class="mb-3 p-3"></div>
+    <app-estoque *ngIf="paginaAtual === 'estoque'" (mudarPagina)="paginaAtual = $event"></app-estoque>
+    <app-faturamento *ngIf="paginaAtual === 'faturamento'" (mudarPagina)="paginaAtual = $event"></app-faturamento>
+    <app-cadastro-nota-fiscal *ngIf="paginaAtual === 'CNF'" (mudarPagina)="paginaAtual = $event"></app-cadastro-nota-fiscal>
+</div>
